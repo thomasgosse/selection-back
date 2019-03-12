@@ -1,42 +1,47 @@
 import { Controller, Get, Post, Delete, Body, Param, Res, HttpStatus } from '@nestjs/common';
 import { UsersService } from './users.service';
-import { Album } from './types/album.type';
+import { Artwork } from './types/artwork.type';
 
 @Controller('/users')
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
-  @Get()
-  getUsers(): string {
-    return this.usersService.doNothing();
-  }
-
-  @Get(':userId')
-  getUser(): string {
-    return this.usersService.doNothing();
-  }
-
-  @Get(':userId/artworks')
-  getArtworks(): string {
-    return this.usersService.doNothing();
-  }
-
-  @Post(':userId/artworks/:artworkId')
-  setArtwork(
-    @Body() album: Album,
+  @Get(':userId/:artworkType')
+  getArtworksByType(
     @Param('userId') userId,
-    @Param('artworkId') artworkId,
+    @Param('artworkType') type,
     @Res() res,
   ) {
-    this.usersService.setAlbum(album, userId, artworkId);
-    res.status(HttpStatus.CREATED).send();
+    this.usersService.getArtworksByType(userId, type)
+      .then(result => res.send(result))
+      .catch(error => res.status(HttpStatus.INTERNAL_SERVER_ERROR).send(error));
   }
 
-  @Delete(':userId/artworks/:artworkId')
+  @Post(':userId/:artworkType/:artworkId')
+  setArtwork(
+    @Body() artwork: Artwork,
+    @Param('userId') userId,
+    @Param('artworkId') artworkId,
+    @Param('artworkType') type,
+    @Res() res,
+  ) {
+    this.usersService.setArtwork(artwork, userId, artworkId, type)
+      .then((result) => {
+        if (!result) res.send(result);
+        res.status(HttpStatus.CREATED).send(result);
+      })
+      .catch(error => res.status(HttpStatus.INTERNAL_SERVER_ERROR).send(error));
+  }
+
+  @Delete(':userId/:artworkType/:artworkId')
   deleteArtwork(
     @Param('userId') userId,
     @Param('artworkId') artworkId,
-  ): string {
-    return this.usersService.deleteAlbum(userId, artworkId);
+    @Param('artworkType') type,
+    @Res() res,
+  ) {
+    this.usersService.deleteArtwork(userId, artworkId, type)
+      .then(() => res.status(HttpStatus.NO_CONTENT).send())
+      .catch(error => res.status(HttpStatus.INTERNAL_SERVER_ERROR).send(error));
   }
 }

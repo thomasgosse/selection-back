@@ -1,8 +1,5 @@
-export class Album {
-  readonly name: string;
-  readonly type: string;
-  readonly artists: string[];
-  readonly image: string;
-  readonly releaseDate: string;
-  readonly id: string;
+import { Artist } from './artist.type';
+import { Artwork } from './artwork.type';
+export class Album extends Artwork {
+  readonly artists: Artist[];
 }

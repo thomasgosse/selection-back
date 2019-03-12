@@ -1,22 +1,24 @@
 import { Injectable } from '@nestjs/common';
 import { FirebaseService } from '../firebase/firebase.service';
-import { Album } from './types/album.type';
+import { Artwork } from './types/artwork.type';
 
 @Injectable()
 export class UsersService {
 
   constructor(private readonly firebaseService: FirebaseService) {}
 
-  doNothing(): string {
-    return 'Doing nothing bro!';
+  getArtworksByType(userId: string, type: string): Promise<any> {
+    return this.firebaseService.getArtworksByType(userId, type)
+      .then((artworks) => {
+        return artworks.docs.map(artwork => artwork.data());
+      });
   }
 
-  setAlbum(album: Album, userId: string, artworkId: string): string {
-    this.firebaseService.setAlbum(album, userId, artworkId);
-    return 'added';
+  setArtwork(artwork: Artwork, userId: string, artworkId: string, type: string): Promise<any> {
+    return this.firebaseService.setArtwork(artwork, userId, artworkId, type);
   }
 
-  deleteAlbum(userId: string, artworkId: string): string {
-    return 'deleted';
+  deleteArtwork(userId: string, artworkId: string, type: string): Promise<any> {
+    return this.firebaseService.deleteArtwork(userId, artworkId, type);
   }
 }
