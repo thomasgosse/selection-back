@@ -22,7 +22,10 @@
   "dependencies": {
     "@nestjs/common": "^5.4.0",
     "@nestjs/core": "^5.4.0",
+    "@nestjs/passport": "^6.0.0",
     "firebase-admin": "^7.0.0",
+    "passport": "^0.4.0",
+    "passport-http-bearer": "^1.0.1",
     "reflect-metadata": "^0.1.12",
     "rimraf": "^2.6.2",
     "rxjs": "^6.2.2",
