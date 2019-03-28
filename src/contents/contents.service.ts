@@ -2,7 +2,7 @@ import { AuthService } from '../auth/auth.service';
 import { Injectable, HttpService } from '@nestjs/common';
 
 @Injectable()
-export class ArtworksService {
+export class ContentsService {
 
   private token: string;
 
