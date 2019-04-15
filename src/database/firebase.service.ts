@@ -2,10 +2,11 @@ import { Injectable } from '@nestjs/common';
 import * as admin from 'firebase-admin';
 import { Artwork } from '../users/types/artwork.type';
 import { DocumentReference, Firestore } from '@google-cloud/firestore';
+import { DatabaseInterface } from './database.interface';
 const serviceAccount = require('./serviceAccountKey.json');
 
 @Injectable()
-export class FirebaseService {
+export class FirebaseService implements DatabaseInterface {
 
   private firestore: Firestore;
 
