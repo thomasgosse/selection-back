@@ -1,6 +1,6 @@
 import { Controller, Get, Post, Delete, Body, Param, Res, HttpStatus, UseGuards } from '@nestjs/common';
 import { UsersService } from './users.service';
-import { Artwork } from './types/artwork.type';
+import { Artwork } from '../types/artwork.type';
 import { AuthGuard } from '@nestjs/passport';
 
 @Controller('/users')

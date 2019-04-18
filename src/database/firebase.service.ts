@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import * as admin from 'firebase-admin';
-import { Artwork } from '../users/types/artwork.type';
+import { Artwork } from '../types/artwork.type';
 import { DocumentReference, Firestore } from '@google-cloud/firestore';
 import { DatabaseInterface } from './database.interface';
 const serviceAccount = require('./serviceAccountKey.json');
@@ -28,7 +28,7 @@ export class FirebaseService implements DatabaseInterface {
     return artworskRef.get();
   }
 
-  async setArtwork(artwork: Artwork, userId: string, artworkId: string, type: string): Promise<any> {
+  async setArtwork(artwork: Artwork, userId: string, artworkId: string, type: string) {
     const artworkRef = this.firestore.collection('users').doc(userId).collection(type).doc(artworkId);
     const artworkExists = await this.checkExistence(artworkRef);
     if (artworkExists) {
@@ -38,7 +38,7 @@ export class FirebaseService implements DatabaseInterface {
     return artwork;
   }
 
-  async deleteArtwork(userId: string, artworkId: string, type: string): Promise<any> {
+  async deleteArtwork(userId: string, artworkId: string, type: string) {
     return this.firestore
       .collection('users')
       .doc(userId)
