@@ -1,4 +1,6 @@
 export interface ContentsProviderInterface {
-  getSearchResult(query: string): Promise<any>;
-  getArtistAlbums?(id: string): Promise<any>;
+  getSearchResult(query: string);
+  getArtistAlbums?(id: string);
+  getAlbumDetail?(id: string);
+  getMovieDetail?(id: string);
 }
