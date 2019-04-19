@@ -1,28 +1,29 @@
 import { Injectable } from '@nestjs/common';
 import { SpotifyService } from './spotify.service';
 import { TmdbService } from './tmdb.service';
+import { SearchItem } from 'src/types/search-item.type';
 import { Album } from 'src/types/album.type';
-import { MappingService } from 'src/types/mapping.service';
 
+type SearchResult = {tvshows: SearchItem[], movies: SearchItem[], artists: SearchItem[], albums: SearchItem[]; };
 @Injectable()
 export class ContentsService {
 
   constructor(
     private readonly musicService: SpotifyService,
-    private readonly movieService: TmdbService,
-    private readonly mappingService: MappingService) {}
+    private readonly movieService: TmdbService) {}
 
-  async getSearchResult(query: string) {
+  async getSearchResult(query: string): Promise<SearchResult> {
     const movieSearchResult = await this.movieService.getSearchResult(query);
     const musicSearchResult = await this.musicService.getSearchResult(query);
     return {
-      artists: this.mappingService.mapSearchItems(musicSearchResult.artists.items, 'artist', 'Artist'),
-      albums: this.mappingService.mapSearchItems(musicSearchResult.albums.items, 'album', 'Album'),
-      tvshows: this.mappingService.mapSearchItems(movieSearchResult.data.results, 'tvshow' , 'TV Show'),
+      tvshows: movieSearchResult.tvshows,
+      movies: movieSearchResult.movies,
+      artists: musicSearchResult.artists,
+      albums: musicSearchResult.albums,
     };
   }
 
-  async getArtistAlbums(id: string) {
+  async getArtistAlbums(id: string): Promise<Album[]> {
     return this.musicService.getArtistAlbums(id);
   }
 }

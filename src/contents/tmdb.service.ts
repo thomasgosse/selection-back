@@ -1,17 +1,20 @@
 import { Injectable, HttpService } from '@nestjs/common';
-import { ContentsProviderInterface } from './contents-provider.interface';
+import { MovieProviderInterface } from './movie-provider.interface';
+import { MappingService } from 'src/types/mapping.service';
+import { SearchItem } from 'src/types/search-item.type';
 const tmdbSecrets = require('./tmdbSecrets.json');
 
 @Injectable()
-export class TmdbService implements ContentsProviderInterface {
+export class TmdbService implements MovieProviderInterface {
 
   private apiKey: string = tmdbSecrets.apiKey;
 
-  constructor(private readonly httpService: HttpService) {}
+  constructor(private readonly httpService: HttpService, private readonly mappingService: MappingService) {}
 
-  getSearchResult(query: string) {
+  async getSearchResult(query: string): Promise<{tvshows: SearchItem[], movies: SearchItem[]}> {
     const url = `https://api.themoviedb.org/3/search/tv?api_key=${this.apiKey}&query=${query}`;
-    return this.httpService.axiosRef.get(url);
+    const tmdbSearchResult = await this.httpService.axiosRef.get(url);
+    return this.mappingService.mapTmdbSearchItems(tmdbSearchResult.data.results);
   }
 
   getMovieDetail(id: string) {

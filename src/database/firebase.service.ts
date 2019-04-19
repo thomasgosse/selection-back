@@ -23,12 +23,17 @@ export class FirebaseService implements DatabaseInterface {
     return document.exists;
   }
 
-  async getArtworksByType(userId: string, type: string) {
+  async getArtworksByType(userId: string, type: string): Promise<Artwork[]> {
     const artworskRef = this.firestore.collection('users').doc(userId).collection(type);
-    return artworskRef.get();
+    const artworks = await artworskRef.get();
+    return artworks.docs.map((artwork) => {
+      const artworkData = artwork.data();
+      const { name, type, images, releaseDate, id } = artworkData;
+      return { name, type, images, releaseDate, id };
+    });
   }
 
-  async setArtwork(artwork: Artwork, userId: string, artworkId: string, type: string) {
+  async setArtwork(artwork: Artwork, userId: string, artworkId: string, type: string): Promise<Artwork | {message: string}> {
     const artworkRef = this.firestore.collection('users').doc(userId).collection(type).doc(artworkId);
     const artworkExists = await this.checkExistence(artworkRef);
     if (artworkExists) {
@@ -38,7 +43,7 @@ export class FirebaseService implements DatabaseInterface {
     return artwork;
   }
 
-  async deleteArtwork(userId: string, artworkId: string, type: string) {
+  async deleteArtwork(userId: string, artworkId: string, type: string): Promise<any> {
     return this.firestore
       .collection('users')
       .doc(userId)

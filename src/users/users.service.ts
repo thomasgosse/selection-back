@@ -7,18 +7,15 @@ export class UsersService {
 
   constructor(private readonly databaseService: FirebaseService) {}
 
-  getArtworksByType(userId: string, type: string) {
-    return this.databaseService.getArtworksByType(userId, type)
-      .then((artworks) => {
-        return artworks.docs.map(artwork => artwork.data());
-      });
+  getArtworksByType(userId: string, type: string): Promise<Artwork[]> {
+    return this.databaseService.getArtworksByType(userId, type);
   }
 
-  setArtwork(artwork: Artwork, userId: string, artworkId: string, type: string): Promise<any> {
+  setArtwork(artwork: Artwork, userId: string, artworkId: string, type: string): Promise<Artwork | {message: string}> {
     return this.databaseService.setArtwork(artwork, userId, artworkId, type);
   }
 
-  deleteArtwork(userId: string, artworkId: string, type: string) {
+  deleteArtwork(userId: string, artworkId: string, type: string): Promise<any> {
     return this.databaseService.deleteArtwork(userId, artworkId, type);
   }
 }

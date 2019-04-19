@@ -29,7 +29,7 @@ export class UsersController {
   ) {
     this.usersService.setArtwork(artwork, userId, artworkId, type)
       .then((result) => {
-        const itExists = result.message && result.message.includes('artwork.already.exists');
+        const itExists = ('message' in result) && result.message.includes('artwork.already.exists');
         if (itExists) res.status(HttpStatus.OK).send(result);
         else res.status(HttpStatus.CREATED).send(result);
       })

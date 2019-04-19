@@ -1,15 +1,22 @@
 import { AuthService } from '../auth/auth.service';
 import { Injectable, HttpService } from '@nestjs/common';
-import { ContentsProviderInterface } from './contents-provider.interface';
+import { MusicProviderInterface } from './music-provider.interface';
+import { MappingService } from 'src/types/mapping.service';
+import { SearchItem } from 'src/types/search-item.type';
+import { AxiosRequestConfig } from 'axios';
+import { Album } from 'src/types/album.type';
 
 @Injectable()
-export class SpotifyService implements ContentsProviderInterface {
+export class SpotifyService implements MusicProviderInterface {
 
   private token: string;
 
-  constructor(private readonly authService: AuthService, private readonly httpService: HttpService) {}
+  constructor(
+    private readonly authService: AuthService,
+    private readonly httpService: HttpService,
+    private readonly mappingService: MappingService) {}
 
-  private getConfig(token: string) {
+  private getConfig(token: string): AxiosRequestConfig {
     return {
       headers: {
         Authorization: 'Bearer '.concat(token),
@@ -17,7 +24,7 @@ export class SpotifyService implements ContentsProviderInterface {
     };
   }
 
-  private async retryCall(error: any) {
+  private async retryCall(error: any): Promise<any> {
     return new Promise(async (resolve, reject) => {
       if (error.response.status === 401) {
         this.token = await this.authService.getSpotifyToken();
@@ -31,33 +38,37 @@ export class SpotifyService implements ContentsProviderInterface {
     });
   }
 
-  private async getSpotifyArtistAlbums(id: string) {
+  private async getSpotifyArtistAlbums(id: string): Promise<any> {
     const url = `https://api.spotify.com/v1/artists/${id}/albums?include_groups=album,single`;
     const config = this.getConfig(this.token);
     return this.httpService.axiosRef.get(url, config)
       .then(result => result.data);
   }
 
-  async getArtistAlbums(id: string) {
+  async getArtistAlbums(id: string): Promise<Album[]> {
     try {
-      return await this.getSpotifyArtistAlbums(id);
+      const spotifyArtistAlbums = await this.getSpotifyArtistAlbums(id);
+      return this.mappingService.mapAlbums(spotifyArtistAlbums.items);
     } catch (error) {
-      return this.retryCall(error);
+      const spotifyArtistAlbums = await this.retryCall(error);
+      return this.mappingService.mapAlbums(spotifyArtistAlbums.items);
     }
   }
 
-  private async getSpotifySearchResult(query: string) {
+  private async getSpotifySearchResult(query: string): Promise<any> {
     const url = `https://api.spotify.com/v1/search?q=${query}&type=artist,album`;
     const config = this.getConfig(this.token);
     return this.httpService.axiosRef.get(url, config)
       .then(result => result.data);
   }
 
-  async getSearchResult(query: string) {
+  async getSearchResult(query: string): Promise<{ artists: SearchItem[], albums: SearchItem[] }> {
     try {
-      return await this.getSpotifySearchResult(query);
+      const spotifySearchResult = await this.getSpotifySearchResult(query);
+      return this.mappingService.mapSpotifySearchItems(spotifySearchResult);
     } catch (error) {
-      return this.retryCall(error);
+      const spotifySearchResult = await this.retryCall(error);
+      return this.mappingService.mapSpotifySearchItems(spotifySearchResult);
     }
   }
 }
