@@ -2,6 +2,7 @@ import { Injectable, HttpService } from '@nestjs/common';
 import { MovieProviderInterface } from './movie-provider.interface';
 import { MappingService } from 'src/types/mapping.service';
 import { SearchItem } from 'src/types/search-item.type';
+import { TVShowDetail } from 'src/types/tvshow-detail.type';
 const tmdbSecrets = require('./tmdbSecrets.json');
 
 @Injectable()
@@ -17,7 +18,9 @@ export class TmdbService implements MovieProviderInterface {
     return this.mappingService.mapTmdbSearchItems(tmdbSearchResult.data.results);
   }
 
-  getMovieDetail(id: string) {
-    return 'to.implement';
+  async getTVShowDetail(id: string): Promise<TVShowDetail> {
+    const url = `https://api.themoviedb.org/3/tv/${id}?api_key=${this.apiKey}`;
+    const tvShowDetail = await this.httpService.axiosRef.get(url);
+    return this.mappingService.mapTVShowDetail(tvShowDetail.data);
   }
 }

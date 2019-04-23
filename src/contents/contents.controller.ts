@@ -27,4 +27,14 @@ export class ContentsController {
       .then(result => res.send(result))
       .catch(() => res.status(HttpStatus.INTERNAL_SERVER_ERROR).send());
   }
+
+  @Get('tvshow/:tvshowId/')
+  getTVShowDetail(
+    @Param('tvshowId') tvshowId: string,
+    @Res() res,
+  ) {
+    this.contentsService.getTVShowDetail(tvshowId)
+      .then(result => res.send(result))
+      .catch(() => res.status(HttpStatus.INTERNAL_SERVER_ERROR).send());
+  }
 }
