@@ -50,9 +50,9 @@ export class MappingService {
   private mapTmdbImages(posterPath: string): {images: Image[]} {
     return  {
       images: [
-        { url: `${this.tmdbImageUrl}w154${posterPath}` , height: 154, width: 154 },
-        { url: `${this.tmdbImageUrl}w342${posterPath}` , height: 342, width: 342 },
         { url: `${this.tmdbImageUrl}w500${posterPath}` , height: 500, width: 500 },
+        { url: `${this.tmdbImageUrl}w342${posterPath}` , height: 342, width: 342 },
+        { url: `${this.tmdbImageUrl}w154${posterPath}` , height: 154, width: 154 },
       ],
     };
   }
