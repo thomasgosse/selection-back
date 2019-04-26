@@ -28,8 +28,8 @@ export class FirebaseService implements DatabaseInterface {
     const artworks = await artworskRef.get();
     return artworks.docs.map((artwork) => {
       const artworkData = artwork.data();
-      const { name, type, images, releaseDate, id } = artworkData;
-      return { name, type, images, releaseDate, id };
+      const { name, type, images, releaseDate, id, timestamp, addedYear } = artworkData;
+      return { name, type, images, releaseDate, id, timestamp, addedYear };
     });
   }
 
