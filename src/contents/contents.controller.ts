@@ -28,6 +28,16 @@ export class ContentsController {
       .catch(() => res.status(HttpStatus.INTERNAL_SERVER_ERROR).send());
   }
 
+  @Get('album/:albumId/')
+  getAlbumDetail(
+    @Param('albumId') albumId: string,
+    @Res() res,
+  ) {
+    this.contentsService.getAlbumDetail(albumId)
+      .then(result => res.send(result))
+      .catch(() => res.status(HttpStatus.INTERNAL_SERVER_ERROR).send());
+  }
+
   @Get('tvshow/:tvshowId/')
   getTVShowDetail(
     @Param('tvshowId') tvshowId: string,

@@ -4,6 +4,9 @@ import { Album } from './album.type';
 import { TVShowDetail } from './tvshow-detail.type';
 import { Season } from './season.type';
 import { Image } from './image.type';
+import { AlbumDetail } from './album-detail.type';
+import { Track } from './track.type';
+import { Artist } from './artist.type';
 
 @Injectable()
 export class MappingService {
@@ -32,6 +35,35 @@ export class MappingService {
     return {
       tvshows: this.mapSearchItems(tmdbSearchResult, 'tvshow', 'TV show'),
       movies: [],
+    };
+  }
+
+  mapArtists(artists: any): Artist[] {
+    return artists.map(artist => ({
+      name: artist.name,
+      id: artist.id,
+    }));
+  }
+
+  mapTracks(tracks: any): Track[] {
+    return tracks.map(track => ({
+      name: track.name,
+      durationMs: track.duration_ms,
+      trackNumber: track.track_number,
+      artists: this.mapArtists(track.artists),
+    }));
+  }
+
+  mapAlbumDetail(album: any): AlbumDetail {
+    return {
+      id: album.id,
+      name: album.name,
+      releaseDate: album.release_date,
+      type: album.type,
+      images: album.images,
+      artists: this.mapArtists(album.artists),
+      label: album.label,
+      tracks: this.mapTracks(album.tracks.items),
     };
   }
 

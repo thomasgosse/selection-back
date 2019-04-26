@@ -4,6 +4,7 @@ import { TmdbService } from './tmdb.service';
 import { SearchItem } from 'src/types/search-item.type';
 import { Album } from 'src/types/album.type';
 import { TVShowDetail } from 'src/types/tvshow-detail.type';
+import { AlbumDetail } from 'src/types/album-detail.type';
 
 type SearchResult = {tvshows: SearchItem[], movies: SearchItem[], artists: SearchItem[], albums: SearchItem[]; };
 @Injectable()
@@ -30,5 +31,9 @@ export class ContentsService {
 
   async getTVShowDetail(id: string): Promise<TVShowDetail> {
     return this.movieService.getTVShowDetail(id);
+  }
+
+  async getAlbumDetail(id: string): Promise<AlbumDetail> {
+    return this.musicService.getAlbumDetail(id);
   }
 }

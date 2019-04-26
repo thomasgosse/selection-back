@@ -6,4 +6,6 @@ export interface Artwork {
   readonly images: Image[];
   readonly releaseDate: string;
   readonly id: string;
+  // readonly timestamp?: number;
+  // readonly addedYear?: string;
 }

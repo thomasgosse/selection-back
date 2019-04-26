@@ -5,6 +5,7 @@ import { MappingService } from 'src/types/mapping.service';
 import { SearchItem } from 'src/types/search-item.type';
 import { AxiosRequestConfig } from 'axios';
 import { Album } from 'src/types/album.type';
+import { AlbumDetail } from 'src/types/album-detail.type';
 
 @Injectable()
 export class SpotifyService implements MusicProviderInterface {
@@ -69,6 +70,23 @@ export class SpotifyService implements MusicProviderInterface {
     } catch (error) {
       const spotifySearchResult = await this.retryCall(error);
       return this.mappingService.mapSpotifySearchItems(spotifySearchResult);
+    }
+  }
+
+  private async getSpotifyAlbumDetail(id: string): Promise<any> {
+    const url = `https://api.spotify.com/v1/albums/${id}`;
+    const config = this.getConfig(this.token);
+    return this.httpService.axiosRef.get(url, config)
+      .then(result => result.data);
+  }
+
+  async getAlbumDetail(id: string): Promise<AlbumDetail> {
+    try {
+      const albumDetail = await this.getSpotifyAlbumDetail(id);
+      return this.mappingService.mapAlbumDetail(albumDetail);
+    } catch (error) {
+      const albumDetail = await this.retryCall(error);
+      return this.mappingService.mapAlbumDetail(albumDetail);
     }
   }
 }
