@@ -25,7 +25,7 @@ export class FirebaseService implements DatabaseInterface {
 
   async getArtworksByType(userId: string, type: string): Promise<Artwork[]> {
     const artworskRef = this.firestore.collection('users').doc(userId).collection(type);
-    const artworks = await artworskRef.get();
+    const artworks = await artworskRef.orderBy('timestamp', 'desc').get();
     return artworks.docs.map((artwork) => {
       const artworkData = artwork.data();
       const { name, type, images, releaseDate, id, timestamp, addedYear } = artworkData;
