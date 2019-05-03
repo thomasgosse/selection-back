@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Delete, Body, Param, Res, HttpStatus, UseGuards } from '@nestjs/common';
+import { Controller, Get, Post, Delete, Body, Param, Res, HttpStatus, UseGuards, Query } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { Artwork } from '../types/artwork.type';
 import { AuthGuard } from '@nestjs/passport';
@@ -12,9 +12,11 @@ export class UsersController {
   getArtworksByType(
     @Param('userId') userId: string,
     @Param('artworkType') type: string,
+    @Query('limit') limit: string,
+    @Query('startAfter') startAfter: string,
     @Res() res,
   ) {
-    this.usersService.getArtworksByType(userId, type)
+    this.usersService.getArtworksByType(userId, type, startAfter, limit)
       .then(result => res.send(result))
       .catch(() => res.status(HttpStatus.INTERNAL_SERVER_ERROR).send());
   }
@@ -45,6 +47,17 @@ export class UsersController {
   ) {
     this.usersService.deleteArtwork(userId, artworkId, type)
       .then(() => res.status(HttpStatus.NO_CONTENT).send())
+      .catch(() => res.status(HttpStatus.INTERNAL_SERVER_ERROR).send());
+  }
+
+  @Get(':userId/:artworkType/count')
+  getArtworksCount(
+    @Param('userId') userId: string,
+    @Param('artworkType') type: string,
+    @Res() res,
+  ) {
+    this.usersService.getArtworksCount(userId, type)
+      .then(result => res.send(result))
       .catch(() => res.status(HttpStatus.INTERNAL_SERVER_ERROR).send());
   }
 }

@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import * as admin from 'firebase-admin';
+import * as firebase from 'firebase-admin';
 import { Artwork } from '../types/artwork.type';
 import { DocumentReference, Firestore } from '@google-cloud/firestore';
 import { DatabaseInterface } from './database.interface';
@@ -11,11 +11,11 @@ export class FirebaseService implements DatabaseInterface {
   private firestore: Firestore;
 
   constructor() {
-    admin.initializeApp({
-      credential: admin.credential.cert(serviceAccount),
+    firebase.initializeApp({
+      credential: firebase.credential.cert(serviceAccount),
       databaseURL: 'https://selection-5744a.firebaseio.com',
     });
-    this.firestore = admin.firestore();
+    this.firestore = firebase.firestore();
   }
 
   private async checkExistence(documentRef: DocumentReference): Promise<boolean> {
@@ -23,9 +23,17 @@ export class FirebaseService implements DatabaseInterface {
     return document.exists;
   }
 
-  async getArtworksByType(userId: string, type: string): Promise<Artwork[]> {
+  private updateArtworksCount(value: number, userId: string, type: string): void {
+    const statsRef = this.firestore.collection('users').doc(userId).collection(type).doc('--stats--');
+    const increment = firebase.firestore.FieldValue.increment(value);
+    statsRef.set({ artworkCount: increment }, { merge: true });
+  }
+
+  async getArtworksByType(userId: string, type: string, startAfter: string, limit: string): Promise<Artwork[]> {
     const artworskRef = this.firestore.collection('users').doc(userId).collection(type);
-    const artworks = await artworskRef.orderBy('timestamp', 'desc').get();
+    const artworks = (startAfter)
+    ? await artworskRef.orderBy('timestamp').startAfter(parseInt(startAfter, 10)).limit(parseInt(limit, 10)).get()
+    : await artworskRef.orderBy('timestamp').limit(parseInt(limit, 10)).get();
     return artworks.docs.map((artwork) => {
       const artworkData = artwork.data();
       const { name, type, images, releaseDate, id, timestamp, addedYear } = artworkData;
@@ -39,7 +47,9 @@ export class FirebaseService implements DatabaseInterface {
     if (artworkExists) {
       return { message: 'artwork.already.exists' };
     }
-    artworkRef.set(artwork);
+    artworkRef
+      .set(artwork)
+      .then(() => this.updateArtworksCount(1, userId, type));
     return artwork;
   }
 
@@ -49,6 +59,15 @@ export class FirebaseService implements DatabaseInterface {
       .doc(userId)
       .collection(type)
       .doc(artworkId)
-      .delete();
+      .delete()
+      .then(() => this.updateArtworksCount(-1, userId, type));
+  }
+
+  async getArtworksCount(userId: string, type: string): Promise<{ artworkCount: number }> {
+    const statsRef = this.firestore.collection('users').doc(userId).collection(type).doc('--stats--');
+    return statsRef.get().then((stats) => {
+      const statsData = stats.data();
+      return statsData ? { artworkCount: statsData.artworkCount } : { artworkCount: -1 };
+    });
   }
 }
