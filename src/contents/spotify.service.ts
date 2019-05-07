@@ -27,7 +27,7 @@ export class SpotifyService implements MusicProviderInterface {
 
   private async retryCall(error: any): Promise<any> {
     return new Promise(async (resolve, reject) => {
-      if (error.response.status === 401) {
+      if (error.response && error.response.status === 401) {
         this.token = await this.authService.getSpotifyToken();
         error.config.headers.Authorization = 'Bearer '.concat(this.token);
         this.httpService.axiosRef(error.config)
