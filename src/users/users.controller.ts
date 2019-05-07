@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Delete, Body, Param, Res, HttpStatus, UseGuards, Query } from '@nestjs/common';
+import { Controller, Get, Post, Delete, Body, Param, Res, HttpStatus, UseGuards, Query, Logger } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { Artwork } from '../types/artwork.type';
 import { AuthGuard } from '@nestjs/passport';
@@ -18,7 +18,10 @@ export class UsersController {
   ) {
     this.usersService.getArtworksByType(userId, type, startAfter, limit)
       .then(result => res.send(result))
-      .catch(() => res.status(HttpStatus.INTERNAL_SERVER_ERROR).send());
+      .catch((e) => {
+        Logger.error(`[UsersController] ${e.message}`);
+        res.status(HttpStatus.INTERNAL_SERVER_ERROR).send();
+      });
   }
 
   @Post(':userId/:artworkType/:artworkId')
@@ -35,7 +38,10 @@ export class UsersController {
         if (itExists) res.status(HttpStatus.OK).send(result);
         else res.status(HttpStatus.CREATED).send(result);
       })
-      .catch(() => res.status(HttpStatus.INTERNAL_SERVER_ERROR).send());
+      .catch((e) => {
+        Logger.error(`[UsersController] ${e.message}`);
+        res.status(HttpStatus.INTERNAL_SERVER_ERROR).send();
+      });
   }
 
   @Delete(':userId/:artworkType/:artworkId')
@@ -47,7 +53,10 @@ export class UsersController {
   ) {
     this.usersService.deleteArtwork(userId, artworkId, type)
       .then(() => res.status(HttpStatus.NO_CONTENT).send())
-      .catch(() => res.status(HttpStatus.INTERNAL_SERVER_ERROR).send());
+      .catch((e) => {
+        Logger.error(`[UsersController] ${e.message}`);
+        res.status(HttpStatus.INTERNAL_SERVER_ERROR).send();
+      });
   }
 
   @Get(':userId/:artworkType/count')
@@ -58,6 +67,9 @@ export class UsersController {
   ) {
     this.usersService.getArtworksCount(userId, type)
       .then(result => res.send(result))
-      .catch(() => res.status(HttpStatus.INTERNAL_SERVER_ERROR).send());
+      .catch((e) => {
+        Logger.error(`[UsersController] ${e.message}`);
+        res.status(HttpStatus.INTERNAL_SERVER_ERROR).send();
+      });
   }
 }

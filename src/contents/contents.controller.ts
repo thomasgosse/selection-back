@@ -1,4 +1,4 @@
-import { Controller, Get, Res, Query, UseGuards, HttpStatus, Param } from '@nestjs/common';
+import { Controller, Get, Res, Query, UseGuards, HttpStatus, Param, Logger } from '@nestjs/common';
 import { ContentsService } from './contents.service';
 import { AuthGuard } from '@nestjs/passport';
 
@@ -15,7 +15,10 @@ export class ContentsController {
     const searchQuery = params['query'];
     this.contentsService.getSearchResult(searchQuery)
       .then(result => res.send(result))
-      .catch(() => res.status(HttpStatus.INTERNAL_SERVER_ERROR).send());
+      .catch((e) => {
+        Logger.error(`[ContentsController] ${e.message}`);
+        res.status(HttpStatus.INTERNAL_SERVER_ERROR).send();
+      });
   }
 
   @Get('artists/:artistId/albums')
@@ -25,7 +28,10 @@ export class ContentsController {
   ) {
     this.contentsService.getArtistAlbums(artistId)
       .then(result => res.send(result))
-      .catch(() => res.status(HttpStatus.INTERNAL_SERVER_ERROR).send());
+      .catch((e) => {
+        Logger.error(`[ContentsController] ${e.message}`);
+        res.status(HttpStatus.INTERNAL_SERVER_ERROR).send();
+      });
   }
 
   @Get('album/:albumId/')
@@ -35,7 +41,10 @@ export class ContentsController {
   ) {
     this.contentsService.getAlbumDetail(albumId)
       .then(result => res.send(result))
-      .catch(() => res.status(HttpStatus.INTERNAL_SERVER_ERROR).send());
+      .catch((e) => {
+        Logger.error(`[ContentsController] ${e.message}`);
+        res.status(HttpStatus.INTERNAL_SERVER_ERROR).send();
+      });
   }
 
   @Get('tvshow/:tvshowId/')
@@ -45,6 +54,9 @@ export class ContentsController {
   ) {
     this.contentsService.getTVShowDetail(tvshowId)
       .then(result => res.send(result))
-      .catch(() => res.status(HttpStatus.INTERNAL_SERVER_ERROR).send());
+      .catch((e) => {
+        Logger.error(`[ContentsController] ${e.message}`);
+        res.status(HttpStatus.INTERNAL_SERVER_ERROR).send();
+      });
   }
 }
