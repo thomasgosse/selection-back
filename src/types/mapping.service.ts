@@ -102,7 +102,7 @@ export class MappingService {
   mapTVShowDetail(tvshow: any): TVShowDetail {
     return {
       id: tvshow.id,
-      name: tvshow.name,
+      name: tvshow.original_name,
       releaseDate: tvshow.first_air_date,
       type: 'tvshow',
       ...(tvshow.poster_path && this.mapTmdbImages(tvshow.poster_path)),

@@ -19,7 +19,7 @@ export class TmdbService implements MovieProviderInterface {
   }
 
   async getTVShowDetail(id: string): Promise<TVShowDetail> {
-    const url = `https://api.themoviedb.org/3/tv/${id}?api_key=${this.apiKey}`;
+    const url = `https://api.themoviedb.org/3/tv/${id}?api_key=${this.apiKey}&language=fr`;
     const tvShowDetail = await this.httpService.axiosRef.get(url);
     return this.mappingService.mapTVShowDetail(tvShowDetail.data);
   }

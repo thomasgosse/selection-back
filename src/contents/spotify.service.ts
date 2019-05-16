@@ -40,7 +40,7 @@ export class SpotifyService implements MusicProviderInterface {
   }
 
   private async getSpotifyArtistAlbums(id: string): Promise<any> {
-    const url = `https://api.spotify.com/v1/artists/${id}/albums?include_groups=album,single`;
+    const url = `https://api.spotify.com/v1/artists/${id}/albums?include_groups=album,single&limit=50`;
     const config = this.getConfig(this.token);
     return this.httpService.axiosRef.get(url, config)
       .then(result => result.data);
