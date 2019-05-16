@@ -10,7 +10,7 @@ export class AuthService {
 
   async validateUser(token: string): Promise<any> {
     return admin.auth().verifyIdToken(token)
-      .then(decodedToken => (decodedToken.aud === authConfig.selectionId) ? true : false)
+      .then(decodedToken => (decodedToken.aud === authConfig.selectionId))
       .catch(() => { throw new UnauthorizedException(); });
   }
 
@@ -22,15 +22,8 @@ export class AuthService {
         'Content-Type': 'application/x-www-form-urlencoded',
       },
     };
-    return new Promise((resolve, reject) => {
-      this.httpService.post('https://accounts.spotify.com/api/token', requestBody, config)
-       .subscribe(
-          (result) => {
-            resolve(result.data.access_token);
-          },
-          (error) => {
-            reject(error);
-          });
-    });
+    return this.httpService.post('https://accounts.spotify.com/api/token', requestBody, config)
+      .toPromise()
+      .then(result => result.data.access_token);
   }
 }
