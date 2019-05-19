@@ -1,11 +1,11 @@
 import { AuthService } from '../auth/auth.service';
 import { Injectable, HttpService } from '@nestjs/common';
 import { MusicProviderInterface } from './music-provider.interface';
-import { MappingService } from 'src/types/mapping.service';
-import { SearchItem } from 'src/types/search-item.type';
+import { MappingService } from '../types/mapping.service';
+import { SearchItem } from '../types/search-item.type';
 import { AxiosRequestConfig } from 'axios';
-import { Album } from 'src/types/album.type';
-import { AlbumDetail } from 'src/types/album-detail.type';
+import { Album } from '../types/album.type';
+import { AlbumDetail } from '../types/album-detail.type';
 
 @Injectable()
 export class SpotifyService implements MusicProviderInterface {

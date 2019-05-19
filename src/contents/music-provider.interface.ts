@@ -1,6 +1,6 @@
-import { SearchItem } from 'src/types/search-item.type';
-import { Album } from 'src/types/album.type';
-import { AlbumDetail } from 'src/types/album-detail.type';
+import { SearchItem } from '../types/search-item.type';
+import { Album } from '../types/album.type';
+import { AlbumDetail } from '../types/album-detail.type';
 
 export interface MusicProviderInterface {
   getSearchResult(query: string): Promise<{ artists: SearchItem[], albums: SearchItem[] }>;

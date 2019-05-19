@@ -2,7 +2,7 @@ import { Injectable, UnauthorizedException, HttpService } from '@nestjs/common';
 import * as admin from 'firebase-admin';
 import * as querystring from 'querystring';
 
-const authConfig = require('./authConfig.json');
+const authConfig = require('../../config/authConfig.json');
 
 @Injectable()
 export class AuthService {

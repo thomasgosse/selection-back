@@ -3,7 +3,7 @@ import * as firebase from 'firebase-admin';
 import { Artwork } from '../types/artwork.type';
 import { DocumentReference, Firestore } from '@google-cloud/firestore';
 import { DatabaseInterface } from './database.interface';
-const serviceAccount = require('./serviceAccountKey.json');
+const serviceAccount = require('../../config/serviceAccountKey.json');
 
 @Injectable()
 export class FirebaseService implements DatabaseInterface {

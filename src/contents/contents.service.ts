@@ -1,10 +1,10 @@
 import { Injectable } from '@nestjs/common';
 import { SpotifyService } from './spotify.service';
 import { TmdbService } from './tmdb.service';
-import { SearchItem } from 'src/types/search-item.type';
-import { Album } from 'src/types/album.type';
-import { TVShowDetail } from 'src/types/tvshow-detail.type';
-import { AlbumDetail } from 'src/types/album-detail.type';
+import { SearchItem } from '../types/search-item.type';
+import { Album } from '../types/album.type';
+import { TVShowDetail } from '../types/tvshow-detail.type';
+import { AlbumDetail } from '../types/album-detail.type';
 
 type SearchResult = {tvshows: SearchItem[], movies: SearchItem[], artists: SearchItem[], albums: SearchItem[]; };
 @Injectable()
