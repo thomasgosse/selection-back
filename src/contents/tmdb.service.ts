@@ -3,12 +3,11 @@ import { MovieProviderInterface } from './movie-provider.interface';
 import { MappingService } from '../types/mapping.service';
 import { SearchItem } from '../types/search-item.type';
 import { TVShowDetail } from '../types/tvshow-detail.type';
-const tmdbSecrets = require('../../config/tmdbSecrets.json');
 
 @Injectable()
 export class TmdbService implements MovieProviderInterface {
 
-  private apiKey: string = tmdbSecrets.apiKey;
+  private apiKey: string = process.env.TMDB_API_KEY as string;
 
   constructor(private readonly httpService: HttpService, private readonly mappingService: MappingService) {}
 

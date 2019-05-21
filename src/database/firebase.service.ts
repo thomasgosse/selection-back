@@ -3,7 +3,6 @@ import * as firebase from 'firebase-admin';
 import { Artwork } from '../types/artwork.type';
 import { DocumentReference, Firestore } from '@google-cloud/firestore';
 import { DatabaseInterface } from './database.interface';
-const serviceAccount = require('../../config/serviceAccountKey.json');
 
 @Injectable()
 export class FirebaseService implements DatabaseInterface {
@@ -11,6 +10,12 @@ export class FirebaseService implements DatabaseInterface {
   private firestore: Firestore;
 
   constructor() {
+    const serviceAccount = {
+      projectId: process.env.FIREBASE_PROJECT_ID as string,
+      privateKey: (process.env.FIREBASE_PRIVATE_KEY as string).replace(/\\n/g, '\n'),
+      clientEmail: process.env.FIREBASE_CLIENT_EMAIL as string,
+    };
+    console.log(serviceAccount);
     firebase.initializeApp({
       credential: firebase.credential.cert(serviceAccount),
       databaseURL: 'https://selection-5744a.firebaseio.com',
