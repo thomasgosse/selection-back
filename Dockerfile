@@ -14,5 +14,5 @@ FROM node:carbon-alpine
 WORKDIR /usr/local/selection
 COPY --from=node_modules /tmp/selection/node_modules ./node_modules
 COPY --from=build /tmp/selection/dist ./dist
-EXPOSE 3000
+EXPOSE 8080
 CMD ["node", "dist/main.js"]
