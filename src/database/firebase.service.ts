@@ -15,7 +15,6 @@ export class FirebaseService implements DatabaseInterface {
       privateKey: (process.env.FIREBASE_PRIVATE_KEY as string).replace(/\\n/g, '\n'),
       clientEmail: process.env.FIREBASE_CLIENT_EMAIL as string,
     };
-    console.log(serviceAccount);
     firebase.initializeApp({
       credential: firebase.credential.cert(serviceAccount),
       databaseURL: 'https://selection-5744a.firebaseio.com',
