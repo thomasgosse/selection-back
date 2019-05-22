@@ -8,7 +8,7 @@ export class AuthService {
 
   async validateUser(token: string): Promise<any> {
     return admin.auth().verifyIdToken(token)
-      .then(decodedToken => (decodedToken.aud === process.env.SELECTION_ID as string))
+      .then(decodedToken => (decodedToken.aud === process.env.FIREBASE_PROJECT_ID as string))
       .catch(() => { throw new UnauthorizedException(); });
   }
 
