@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { Module, HttpModule } from '@nestjs/common';
 import { ContentsController } from './contents.controller';
 import { SpotifyService } from './spotify.service';
 import { AuthModule } from '../auth/auth.module';
@@ -9,6 +9,6 @@ import { MappingService } from '../types/mapping.service';
 @Module({
   controllers: [ContentsController],
   providers: [ContentsService, SpotifyService, TmdbService, MappingService],
-  imports: [AuthModule],
+  imports: [AuthModule, HttpModule],
 })
 export class ContentsModule {}
